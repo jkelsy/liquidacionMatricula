@@ -6,7 +6,10 @@
 package com.jkelsy;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -29,6 +32,10 @@ public class EstudianteController implements Serializable {
 
     private Estudiante estudiante;
     private String PEOPLE_CODE_ID;
+    private int anyoActual;
+    private String semestreActual;
+    
+    private List<Integer> anyoList;
     
     //soportes   
     private Archivo archivoIdentificacion;
@@ -124,7 +131,10 @@ public class EstudianteController implements Serializable {
     public void inicio() {
         HttpSession session = SessionUtils.getSession();
         this.PEOPLE_CODE_ID = ((String) session.getAttribute("PEOPLE_CODE_ID"));
-        this.estudiante = estudianteFacade.findByPEOPLE_CODE_ID(this.PEOPLE_CODE_ID);
+        this.anyoActual = ((int) session.getAttribute("anyoActual"));
+        this.semestreActual = ((String) session.getAttribute("semestreActual"));
+        
+        this.estudiante = estudianteFacade.findByPEOPLE_CODE_ID(this.PEOPLE_CODE_ID, this.anyoActual, this.semestreActual);
         
         this.archivoIdentificacion = archivoFacade.findByTipoAndPEOPLE_CODE_ID(Constantes.TIPO_IDENTIFICACION, this.PEOPLE_CODE_ID);
         this.archivoEstrato = archivoFacade.findByTipoAndPEOPLE_CODE_ID(Constantes.TIPO_ESTRATO, this.PEOPLE_CODE_ID);
@@ -139,6 +149,11 @@ public class EstudianteController implements Serializable {
 
         if (this.estudiante == null) {
             this.estudiante = new Estudiante();
+        }
+        
+        this.anyoList = new ArrayList<>();
+        for (int i = -15; i < 1; i++) {
+            this.anyoList.add(Calendar.getInstance().get(Calendar.YEAR)+i );
         }
     }
 
@@ -161,6 +176,8 @@ public class EstudianteController implements Serializable {
     public void guardar() {
         HttpSession session = SessionUtils.getSession();
         estudiante.setPEOPLE_CODE_ID((String) session.getAttribute("PEOPLE_CODE_ID"));
+        estudiante.setAnyoLiquidacion(anyoActual);
+        estudiante.setSemestre(semestreActual);
         estudiante.setFechaActualizacion(new Date());
         estudiante.setActualizadoPor((String) session.getAttribute("username"));
         estudianteFacade.guardar(estudiante);
@@ -171,7 +188,9 @@ public class EstudianteController implements Serializable {
     public void cargarSoporteIdentificacion(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();        
         this.archivoIdentificacion = archivoService.upload(Constantes.TIPO_IDENTIFICACION, 
-                (String)session.getAttribute("PEOPLE_CODE_ID"),
+                (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,                
                 event.getFile());      
     }
     
@@ -179,6 +198,8 @@ public class EstudianteController implements Serializable {
         HttpSession session = SessionUtils.getSession();
         this.archivoEstrato = archivoService.upload(Constantes.TIPO_ESTRATO, 
                 (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());       
     }
     
@@ -186,6 +207,8 @@ public class EstudianteController implements Serializable {
         HttpSession session = SessionUtils.getSession();
         this.archivoMensualidad = archivoService.upload(Constantes.TIPO_MENSUALIDAD, 
                 (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());            
     }
     
@@ -193,6 +216,8 @@ public class EstudianteController implements Serializable {
         HttpSession session = SessionUtils.getSession();
         this.archivoInstrumentosPublicos = archivoService.upload(Constantes.TIPO_INSTRUMENTOS, 
                 (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());            
     }
     
@@ -200,6 +225,8 @@ public class EstudianteController implements Serializable {
         HttpSession session = SessionUtils.getSession();
         this.archivoDeclaracionRenta = archivoService.upload(Constantes.TIPO_DECLARACION, 
                 (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());            
     }
     
@@ -207,13 +234,17 @@ public class EstudianteController implements Serializable {
         HttpSession session = SessionUtils.getSession();
         this.archivoBalance = archivoService.upload(Constantes.TIPO_BALANCE, 
                 (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());            
     }
     
     public void cargarSoporteIngreso(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoIngresosRetenciones = archivoService.upload(Constantes.TIPO_INGRESO_RETENCION, 
-                (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                (String)session.getAttribute("PEOPLE_CODE_ID"),
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());            
     }
     
@@ -221,7 +252,17 @@ public class EstudianteController implements Serializable {
         HttpSession session = SessionUtils.getSession();
         this.archivoPerdidasGanancias = archivoService.upload(Constantes.TIPO_PERDIDA_GANANCIA, 
                 (String)session.getAttribute("PEOPLE_CODE_ID"), 
+                this.anyoActual,
+                this.semestreActual,
                 event.getFile());            
+    }
+
+    public List<Integer> getAnyoList() {
+        return anyoList;
+    }
+
+    public void setAnyoList(List<Integer> anyoList) {
+        this.anyoList = anyoList;
     }
     
 }

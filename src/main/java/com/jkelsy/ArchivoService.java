@@ -28,11 +28,13 @@ public class ArchivoService implements Serializable{
     @Inject private ArchivoFacade archivoRepository;
     @Inject private ApplicationBean application;
     
-    public Archivo upload(String tipo, String PEOPLE_CODE_ID, UploadedFile uploaded){        
+    public Archivo upload(String tipo, String PEOPLE_CODE_ID, int anyo, String semestre, UploadedFile uploaded){        
         Archivo archivo = new Archivo();
         archivo.setExtension(FilenameUtils.getExtension(uploaded.getFileName()));
         archivo.setNombreOrigen(uploaded.getFileName());
         archivo.setPEOPLE_CODE_ID(PEOPLE_CODE_ID);
+        archivo.setAnyo(anyo);
+        archivo.setSemestre(semestre);
         archivoRepository.create(archivo);
             
         InputStream input = null;

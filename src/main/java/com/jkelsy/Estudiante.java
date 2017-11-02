@@ -7,7 +7,6 @@ package com.jkelsy;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.inject.Inject;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,11 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 
 @Entity
-@NamedQuery(name = "Estudiante.findByCode", query = "Select e from Estudiante e where e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID")
+@NamedQuery(name = "Estudiante.findByCode", query = 
+        "Select e from Estudiante e where e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID and e.anyoLiquidacion = :anyo and e.semestre = :semestre"
+)
 public class Estudiante implements Serializable { 
     
     @Id
@@ -28,6 +27,10 @@ public class Estudiante implements Serializable {
     private Long id;
 
     @Basic private String PEOPLE_CODE_ID;
+    
+    @Basic private int anyoLiquidacion;
+    
+    @Basic private String semestre;
     
     @Basic private String nacionalidad;
 
@@ -44,8 +47,6 @@ public class Estudiante implements Serializable {
     @Basic private int ultimoPago; //pago mensual último anyo secundaria
     
     @Basic private int ultimoAnyoPago; //último año secundaria    
-    
-    @Basic private int anyoLiquidacion; //último año secundaria
     
     @Temporal(TemporalType.TIMESTAMP) private Date fechaActualizacion;
     
@@ -163,5 +164,13 @@ public class Estudiante implements Serializable {
 
     public void setNacionalidad(String nacionalidad) {
         this.nacionalidad = nacionalidad;
+    }
+
+    public String getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(String semestre) {
+        this.semestre = semestre;
     }
 }

@@ -29,11 +29,13 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
         super(Estudiante.class);
     }
     
-    public Estudiante findByPEOPLE_CODE_ID(String PEOPLE_CODE_ID){
+    public Estudiante findByPEOPLE_CODE_ID(String PEOPLE_CODE_ID, int anyo, String semestre){
         Estudiante temporal;       
         try{
             temporal = em.createNamedQuery("Estudiante.findByCode", Estudiante.class)
                     .setParameter("PEOPLE_CODE_ID", PEOPLE_CODE_ID)
+                    .setParameter("anyo", anyo)
+                    .setParameter("semestre", semestre)
                     .getSingleResult();
         }catch(Exception e){            
             temporal = null;

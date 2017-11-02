@@ -60,12 +60,16 @@ public class LoginController implements Serializable {
             HttpSession session = SessionUtils.getSession();            
             session.setAttribute("username", user);            
             Object[] usuario = loginService.buscarPEOPLE_CODE_ID(user);
+            Object[] configuracion = loginService.buscarConfiguracion();
             
             if(usuario!= null){
                 session.setAttribute("PEOPLE_CODE_ID", usuario[0]);                          
                 session.setAttribute("FIRST_NAME", usuario[1]);
                 session.setAttribute("MIDDLE_NAME", usuario[2]);
                 session.setAttribute("LAST_NAME", usuario[3]);
+                
+                session.setAttribute("anyoActual", configuracion[0]);
+                session.setAttribute("semestreActual", configuracion[1]);
                 return "pages/main?faces-redirect=true";
             }
             

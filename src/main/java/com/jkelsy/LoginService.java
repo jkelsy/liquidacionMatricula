@@ -24,6 +24,9 @@ public class LoginService implements Serializable {
 
     @PersistenceContext(unitName = "LiquidacionFormularioPU")
     private EntityManager em;
+    
+    @PersistenceContext(unitName = "LiquidacionPU2")
+    private EntityManager em2;
 
     public boolean buscarSalto(String username, String password) {
 
@@ -86,6 +89,25 @@ public class LoginService implements Serializable {
             if (usuario != null) {
                 System.out.println(usuario[0] + " " + usuario[1] + " " + usuario[2]);
                 return usuario;                
+            }
+        } catch (NoResultException nre) {
+            return null;
+        }
+
+        return null;
+    }
+    
+    public Object[] buscarConfiguracion() {
+
+        Query q = em2.createNativeQuery(
+                "Select c.anyo, c.semestre from configuracion c where c.id = 1");
+        Object[] configuracion = null;
+        try {
+            configuracion = (Object[]) q.getSingleResult();
+
+            if (configuracion != null) {
+                System.out.println(configuracion[0] + " " + configuracion[1] );
+                return configuracion;                
             }
         } catch (NoResultException nre) {
             return null;
