@@ -46,4 +46,23 @@ public class ArchivoFacade extends AbstractFacade<Archivo> {
         }
     }
     
+    public Archivo findByperiodo(String tipo, String PEOPLE_CODE_ID, String semestre, int anyo){
+        List<Archivo> temporal;       
+        try{
+            temporal = em.createNamedQuery("Archivo.findByPeriodo", Archivo.class)
+                    .setParameter("TIPO", tipo)
+                    .setParameter("PEOPLE_CODE_ID", PEOPLE_CODE_ID)
+                    .setParameter("anyo", anyo)
+                    .setParameter("semestre", semestre)
+                    .getResultList();
+            if(temporal.isEmpty()){
+                return null;
+            }else{
+                return temporal.get(0);
+            }
+        }catch(Exception e){            
+            return null;
+        }
+    }
+    
 }

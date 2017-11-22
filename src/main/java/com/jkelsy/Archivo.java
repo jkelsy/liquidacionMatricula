@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -16,7 +17,16 @@ import javax.persistence.Table;
  */
 @Entity(name = "Archivo")
 @Table(name = "archivo")
-@NamedQuery(name = "Archivo.findByTipoAndCode", query = "Select e from Archivo e where e.tipoSoporte = :TIPO and e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID")
+@NamedQueries({
+    @NamedQuery(
+        name = "Archivo.findByTipoAndCode", 
+        query = "Select e from Archivo e where e.tipoSoporte = :TIPO and e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID"
+    ),
+    @NamedQuery(
+        name = "Archivo.findByPeriodo", 
+        query = "Select e from Archivo e where e.tipoSoporte = :TIPO and e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID and e.anyo = :anyo and e.semestre = :semestre"
+    )
+})
 public class Archivo implements Serializable {
 
     @Id
@@ -26,8 +36,6 @@ public class Archivo implements Serializable {
     @Basic private String nombre;
     
     @Basic private String nombreOrigen;
-
-    @Basic private String contentType;
     
     @Basic private String extension;
     
@@ -82,14 +90,6 @@ public class Archivo implements Serializable {
 
     public void setNombreOrigen(String nombreOrigen) {
         this.nombreOrigen = nombreOrigen;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 
     public String getRutaWeb() {

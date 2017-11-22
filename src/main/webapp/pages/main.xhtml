@@ -35,11 +35,14 @@
             </f:metadata>
             <div class="row">                
                 <div class="col-lg-12">
-                    <h:form id="fListTarea">                        
+                    <h:form id="formEstudiante">  
+                        <p:growl id="growl" showDetail="true" />
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <p:panel>
-                                    <f:facet name="header">Nacionalidad</f:facet>
+                                    <f:facet name="header">
+                                        Nacionalidad: Si tiene nacionalidad extrangera, ignorar el resto de campos de este formulario
+                                    </f:facet>
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <label>Seleccionar nacionalidad:</label>
@@ -69,7 +72,12 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" 
+                                                             action="#{estudianteController.eliminarSoporteIdentificacion}"
+                                                             style="background-color: red;"
+                                                             update="formEstudiante" >
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte de identificación actual?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
 
                                     </div>
@@ -109,16 +117,30 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" 
+                                                             action="#{estudianteController.eliminarSoporteEstrato}"
+                                                             style="background-color: red;" update="formEstudiante">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte del estrato actual?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
                                 </p:panel>
 
                                 <p:panel>
-                                    <f:facet name="header">Pago mensualidad último año de Secundaria</f:facet>
+                                    <f:facet name="header">
+                                        Pago mensualidad último año de Secundaria:
+                                    </f:facet>
                                     <div class="row">
                                         <div class="col-lg-2">
-                                            <label>Año pagado</label>
+                                            <label>Tipo Institución Educativa:</label>
+                                            <p:selectOneMenu value="#{estudianteController.estudiante.tipoColegio}">
+                                                <f:selectItem noSelectionOption="true" itemValue="" itemLabel="" />
+                                                <f:selectItem itemValue="Oficial" itemLabel="Oficial" />
+                                                <f:selectItem itemValue="Privado" itemLabel="Privado" />                                                
+                                            </p:selectOneMenu>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label>Último anyo estudio</label>
                                             <p:selectOneMenu value="#{estudianteController.estudiante.ultimoAnyoPago}">
                                                 <f:selectItem noSelectionOption="true" itemLabel="" /> 
                                                 <f:selectItems value="#{estudianteController.anyoList}"/>
@@ -129,8 +151,8 @@
                                             <p:inputNumber value="#{estudianteController.estudiante.ultimoPago}"/>
                                         </div>
 
-                                        <div class="col-lg-5">
-                                            <label>Volante Pago última mensualidad</label>
+                                        <div class="col-lg-4">
+                                            <label>Volante Pago última mensualidad / acta de grado colegio oficial</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteMensualidad}"
                                                 update="@widgetVar(dlgMensualidad)"
@@ -295,12 +317,17 @@
 
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <p:commandButton action="#{estudianteController.guardar}" value="Guardar" class="form-control" />
+                                        <p:commandButton action="#{estudianteController.guardar}" value="Guardar" update="formEstudiante" class="form-control" />
                                     </div>
                                 </div>
 
                             </div>
-                        </div>                        
+                        </div>   
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
                     </h:form>
                 </div>
             </div>

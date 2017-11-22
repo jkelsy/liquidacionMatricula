@@ -39,6 +39,8 @@ public class Estudiante implements Serializable {
     @Basic private String Apellidos;
 
     @Basic private int estrato;
+    
+    @Basic private String tipoColegio; //oficial o privado
 
     @Basic private int patrimonio;
 
@@ -172,5 +174,13 @@ public class Estudiante implements Serializable {
 
     public void setSemestre(String semestre) {
         this.semestre = semestre;
+    }
+
+    public String getTipoColegio() {
+        return tipoColegio;
+    }
+
+    public void setTipoColegio(String tipoColegio) {
+        this.tipoColegio = tipoColegio;
     }
 }
