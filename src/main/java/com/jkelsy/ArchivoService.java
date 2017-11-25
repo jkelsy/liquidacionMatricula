@@ -35,9 +35,9 @@ public class ArchivoService implements Serializable {
     @Inject
     private ApplicationBean application;
 
-    public Archivo upload(String tipo, String PEOPLE_CODE_ID, int anyo, String semestre, UploadedFile uploaded) {
+    public Archivo upload(String tipo, String PEOPLE_CODE_ID, UploadedFile uploaded) {
         
-        Archivo archivo = archivoRepository.findByperiodo(tipo, PEOPLE_CODE_ID, semestre, anyo);
+        Archivo archivo = archivoRepository.findByTipoAndPEOPLE_CODE_ID(tipo, PEOPLE_CODE_ID);
         
         if(archivo == null){
             archivo = new Archivo();
@@ -45,9 +45,7 @@ public class ArchivoService implements Serializable {
         
         archivo.setExtension(FilenameUtils.getExtension(uploaded.getFileName()));
         archivo.setNombreOrigen(uploaded.getFileName());
-        archivo.setPEOPLE_CODE_ID(PEOPLE_CODE_ID);
-        archivo.setAnyo(anyo);
-        archivo.setSemestre(semestre);
+        archivo.setPEOPLE_CODE_ID(PEOPLE_CODE_ID);       
         archivo.setTipoSoporte(tipo);
         
         if(archivo.getId() == null){
@@ -70,7 +68,7 @@ public class ArchivoService implements Serializable {
             
 
         } catch (IOException e) {
-            System.err.println("que cagada marica " + e.getMessage());
+            System.err.println("Error al subir el archivo al servidor " + e.getMessage());
             return null;
         } finally {
             IOUtils.closeQuietly(input);

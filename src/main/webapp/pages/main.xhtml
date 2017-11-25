@@ -29,12 +29,22 @@
             </style>
         </ui:define>
         <ui:define name="content">
-
             <f:metadata>                      
                 <f:viewAction action="#{estudianteController.inicio()}"/>
-            </f:metadata>
-            <div class="row">                
+            </f:metadata>            
+            <div class="row">           
                 <div class="col-lg-12">
+                
+                    <div class="alert alert-danger">
+                       En caso de que el estudiante, con el objeto de cancelar por derechos
+                       de matrícula una suma inferior a la que corresponda, presente información
+                       o documentación falsa, inexacta, o que no corresponda a la verdad, 
+                       la Universidad liquidará el valor que realmente debió haber cancelado,
+                       más un recargo equivalente al ciento por ciento de dicha suma.
+                       Ello sin perjuicio de las acciones disciplinarias a que hubiese lugar,
+                       de conformidad con el <strong>Reglamento Estudiantil</strong>.
+                    </div>
+
                     <h:form id="formEstudiante">  
                         <p:growl id="growl" showDetail="true" />
                         <div class="panel panel-default">
@@ -56,14 +66,18 @@
                                             <label>Documento Identidad</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteIdentificacion}"
-                                                update="@widgetVar(dlgIdentificacion)"
+                                                update="@widgetVar(dlgIdentificacion) labelNacionalidad"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
                                                 uploadLabel="Guardar"
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
+                                                
                                             </p:fileUpload>
+                                            
+                                            <p:outputLabel id="labelNacionalidad" value="#{estudianteController.archivoIdentificacion.nombreOrigen}"/> 
+                                            
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -101,7 +115,7 @@
                                             <label>Recibo Servicio Público</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteEstrato}"
-                                                update="@widgetVar(dlgEstrato)"
+                                                update="@widgetVar(dlgEstrato) labelEstrato"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -109,6 +123,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelEstrato" value="#{estudianteController.archivoEstrato.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -155,7 +170,7 @@
                                             <label>Volante Pago última mensualidad / acta de grado colegio oficial</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteMensualidad}"
-                                                update="@widgetVar(dlgMensualidad)"
+                                                update="@widgetVar(dlgMensualidad) labelMensualidad"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -163,6 +178,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelMensualidad" value="#{estudianteController.archivoMensualidad.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -171,13 +187,27 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" 
+                                                             style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoporteMensualidad()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte del pago de mensualidad?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
                                 </p:panel>
 
                                 <p:panel>
                                     <f:facet name="header">Patrimonio</f:facet>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-info">
+                                                <strong>Debe presentar los siguientes documentos:</strong>
+                                                Certificado de bienes de instrumentos públicos y declaranción de 
+                                                rentas, sino declara balance firmado por un contador titulado
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <p:inputNumber value="#{estudianteController.estudiante.patrimonio}"/>
@@ -186,7 +216,7 @@
                                             <label>Certificado Bienes de Instrumentos Públicos</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteInstrumentos}"
-                                                update="@widgetVar(dlgInstrumentos)"
+                                                update="@widgetVar(dlgInstrumentos) labelInstrumentos"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -194,6 +224,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelInstrumentos" value="#{estudianteController.archivoInstrumentosPublicos.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -202,7 +233,11 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoporteInstrumentos()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte instrumentos públicos?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -212,7 +247,7 @@
                                             <label>Declaración de Renta</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteDeclaracion}"
-                                                update="@widgetVar(dlgDeclaracion)"
+                                                update="@widgetVar(dlgDeclaracion) labelDeclaracion labelDeclaracion2"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -220,6 +255,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelDeclaracion" value="#{estudianteController.archivoDeclaracionRenta.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -228,7 +264,12 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoporteDeclaracion()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte de declaración de renta?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                           
                                         </div>
                                     </div>
                                     <div class="row">
@@ -238,7 +279,7 @@
                                             <label>Balance firmado por contador titulado</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteBalance}"
-                                                update="@widgetVar(dlgBalance)"
+                                                update="@widgetVar(dlgBalance) labelBalance"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -246,6 +287,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelBalance" value="#{estudianteController.archivoBalance.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -254,12 +296,59 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoporteBalance()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte de balance?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
                                 </p:panel>
                                 <p:panel>
                                     <f:facet name="header">Ingresos</f:facet>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-info">
+                                                <strong>Debe presentar los siguientes documentos:</strong>
+                                                La declaración de renta, en caso de ser asalariado el certificado
+                                                de ingresos y retenciones, sino presenta declaración de renta ni es
+                                                asalariado presentará estado de pérdidas y ganancias firmado por un 
+                                                contador titulado.
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3">                                            
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label>Declaración de Renta</label>
+                                            <p:fileUpload
+                                                fileUploadListener="#{estudianteController.cargarSoporteDeclaracion}"
+                                                update="@widgetVar(dlgDeclaracion) labelDeclaracion labelDeclaracion2"
+                                                auto="true"
+                                                allowTypes="/(\.|\/)(pdf)$/" 
+                                                label="Seleccionar Soporte"
+                                                uploadLabel="Guardar"
+                                                cancelLabel="Cancelar"
+                                                invalidFileMessage="El archivo debe estar en formato PDF">
+                                            </p:fileUpload>
+                                            <p:outputLabel id="labelDeclaracion2" value="#{estudianteController.archivoDeclaracionRenta.nombreOrigen}"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label>Opciones</label><br/>
+                                            <p:commandButton onclick="PF('dlgDeclaracion').show();"
+                                                             value="Visualizar" 
+                                                             style="background-color: green; width: 300px;"                                                             
+                                                             />
+
+                                            <p:commandButton value="Eliminar" style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoporteDeclaracion()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte de declaración de renta?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <p:inputNumber value="#{estudianteController.estudiante.ingreso}" />
@@ -268,7 +357,7 @@
                                             <label>Certificado de Ingresos y Retenciones</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoporteIngreso}"
-                                                update="@widgetVar(dlgIngreso)"
+                                                update="@widgetVar(dlgIngreso) labelIngreso"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -276,6 +365,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelIngreso" value="#{estudianteController.archivoIngresosRetenciones.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -284,17 +374,21 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoporteIngreso()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte de ingresos y retenciones?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row"> 
                                         <div class="col-lg-3">                                            
                                         </div>
                                         <div class="col-lg-6">
                                             <label>Estado de Pérdidas y Ganancias firmado por contador titulado</label>
                                             <p:fileUpload
                                                 fileUploadListener="#{estudianteController.cargarSoportePerdida}"
-                                                update="@widgetVar(dlgPerdida)"
+                                                update="@widgetVar(dlgPerdida) labelPerdida"
                                                 auto="true"
                                                 allowTypes="/(\.|\/)(pdf)$/" 
                                                 label="Seleccionar Soporte"
@@ -302,6 +396,7 @@
                                                 cancelLabel="Cancelar"
                                                 invalidFileMessage="El archivo debe estar en formato PDF">
                                             </p:fileUpload>
+                                            <p:outputLabel id="labelPerdida" value="#{estudianteController.archivoPerdidasGanancias.nombreOrigen}"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <label>Opciones</label><br/>
@@ -310,7 +405,11 @@
                                                              style="background-color: green; width: 300px;"                                                             
                                                              />
 
-                                            <p:commandButton value="Eliminar" style="background-color: red;"/>
+                                            <p:commandButton value="Eliminar" style="background-color: red;"
+                                                             update="formEstudiante"
+                                                             action="#{estudianteController.eliminarSoportePerdida()}">
+                                                <p:confirm header="Confirmación" message="Desea eliminar el soporte de pérdidas y ganancias?" icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
                                 </p:panel>                                      

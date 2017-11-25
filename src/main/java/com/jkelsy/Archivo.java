@@ -23,8 +23,8 @@ import javax.persistence.Table;
         query = "Select e from Archivo e where e.tipoSoporte = :TIPO and e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID"
     ),
     @NamedQuery(
-        name = "Archivo.findByPeriodo", 
-        query = "Select e from Archivo e where e.tipoSoporte = :TIPO and e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID and e.anyo = :anyo and e.semestre = :semestre"
+        name = "Archivo.findByEstudiante", 
+        query = "Select e from Archivo e where e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID"
     )
 })
 public class Archivo implements Serializable {
@@ -47,11 +47,6 @@ public class Archivo implements Serializable {
     
     @Basic private String PEOPLE_CODE_ID;
     
-    @Basic private int anyo;
-    
-    @Basic private String semestre;
-
-
     public Long getId() {
         return this.id;
     }
@@ -116,21 +111,4 @@ public class Archivo implements Serializable {
         this.PEOPLE_CODE_ID = PEOPLE_CODE_ID;
     }
 
-    public int getAnyo() {
-        return anyo;
-    }
-
-    public void setAnyo(int anyo) {
-        this.anyo = anyo;
-    }
-
-    public String getSemestre() {
-        return semestre;
-    }
-
-    public void setSemestre(String semestre) {
-        this.semestre = semestre;
-    }
-
-   
 }

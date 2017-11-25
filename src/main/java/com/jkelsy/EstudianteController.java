@@ -272,25 +272,26 @@ public class EstudianteController implements Serializable {
             return false;
         }
         
+        //validar soportes para el patrimonio
         //validar soporte para instrumentos públicos
         if(archivoInstrumentosPublicos == null){
             FacesContext.getCurrentInstance().addMessage(
                     null, new FacesMessage(
                             FacesMessage.SEVERITY_ERROR,
-                            "Debe ingresar un soporte para certificado de bienes de instrumentos públicos",
-                            "Debe ingresar un soporte para certificado de bienes de instrumentos públicos")
+                            "Para el Patrimonio debe ingresar un soporte para certificado de bienes de instrumentos públicos",
+                            "Para el Patrimonio debe ingresar un soporte para certificado de bienes de instrumentos públicos")
             );
             return false;
         }
         
-        //validar soporte para instrumentos públicos
+        //validar soportes para el patrimonio
         //declaracion de renta o balance firmado por un contador
         if((archivoDeclaracionRenta == null) && (archivoBalance == null)){
             FacesContext.getCurrentInstance().addMessage(
                     null, new FacesMessage(
                             FacesMessage.SEVERITY_ERROR,
-                            "Debe ingresar un soporte para la declaración de renta o un soporte de balance firmado por un contador",
-                            "Debe ingresar un soporte para la declaración de renta o un soporte de balance firmado por un contador")
+                            "para el Patrimonio debe ingresar un soporte para la declaración de renta o un soporte de balance firmado por un contador",
+                            "para el Patrimonio debe ingresar un soporte para la declaración de renta o un soporte de balance firmado por un contador")
             );
             return false;
         }
@@ -300,8 +301,28 @@ public class EstudianteController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(
                     null, new FacesMessage(
                             FacesMessage.SEVERITY_ERROR,
-                            "Debe ingresar un ingreso válido",
-                            "Debe ingresar un ingreso válido")
+                            "Debe intruducir un valor de ingreso válido",
+                            "Debe intruducir un valor de ingreso válido")
+            );
+            return false;
+        }
+        
+        //validar soportes para ingreso
+        //validar soporte para instrumentos públicos
+        if((archivoDeclaracionRenta == null) && (archivoIngresosRetenciones == null) && (archivoPerdidasGanancias == null) ){
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_ERROR,
+                            "para los Ingresos  Debe presentar los siguientes documentos: " +
+"                                                La declaración de renta, en caso de ser asalariado el certificado\n" +
+"                                                de ingresos y retenciones, sino presenta declaración de renta ni es\n" +
+"                                                asalariado presentará estado de pérdidas y ganancias firmado por un \n" +
+"                                                contador titulado.",
+                            "para los Ingresos   Debe presentar los siguientes documentos: " +
+"                                                La declaración de renta, en caso de ser asalariado el certificado\n" +
+"                                                de ingresos y retenciones, sino presenta declaración de renta ni es\n" +
+"                                                asalariado presentará estado de pérdidas y ganancias firmado por un \n" +
+"                                                contador titulado.")
             );
             return false;
         }
@@ -335,9 +356,7 @@ public class EstudianteController implements Serializable {
     public void cargarSoporteIdentificacion(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoIdentificacion = archivoService.upload(Constantes.TIPO_IDENTIFICACION,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),                
                 event.getFile());
     }
     
@@ -359,9 +378,7 @@ public class EstudianteController implements Serializable {
     public void cargarSoporteEstrato(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoEstrato = archivoService.upload(Constantes.TIPO_ESTRATO,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),               
                 event.getFile());
     }
     
@@ -383,55 +400,133 @@ public class EstudianteController implements Serializable {
     public void cargarSoporteMensualidad(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoMensualidad = archivoService.upload(Constantes.TIPO_MENSUALIDAD,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),                
                 event.getFile());
+    }
+    
+    public void eliminarSoporteMensualidad(){
+        if(archivoMensualidad != null){
+            archivoService.remove(archivoMensualidad);
+            archivoFacade.remove(archivoMensualidad);
+            archivoMensualidad = null;
+            
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_INFO,
+                            "Soporte de pago mensualidad eliminado de manera exitosa",
+                            "Soporte de pago mensualidad eliminado de manera exitosa")
+            );
+        }        
     }
 
     public void cargarSoporteInstrumentos(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoInstrumentosPublicos = archivoService.upload(Constantes.TIPO_INSTRUMENTOS,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),              
                 event.getFile());
+    }
+    
+    public void eliminarSoporteInstrumentos(){
+        if(archivoInstrumentosPublicos != null){
+            archivoService.remove(archivoInstrumentosPublicos);
+            archivoFacade.remove(archivoInstrumentosPublicos);
+            archivoInstrumentosPublicos = null;
+            
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_INFO,
+                            "Soporte de instrumentos públicos eliminado de manera exitosa",
+                            "Soporte de instrumentos públicos eliminado de manera exitosa")
+            );
+        }        
     }
 
     public void cargarSoporteDeclaracion(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoDeclaracionRenta = archivoService.upload(Constantes.TIPO_DECLARACION,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),               
                 event.getFile());
+    }
+    
+    public void eliminarSoporteDeclaracion(){
+        if(archivoDeclaracionRenta != null){
+            archivoService.remove(archivoDeclaracionRenta);
+            archivoFacade.remove(archivoDeclaracionRenta);
+            archivoDeclaracionRenta = null;
+            
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_INFO,
+                            "Soporte de declración de renta eliminado de manera exitosa",
+                            "Soporte de declración de renta eliminado de manera exitosa")
+            );
+        }        
     }
 
     public void cargarSoporteBalance(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoBalance = archivoService.upload(Constantes.TIPO_BALANCE,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),                
                 event.getFile());
+    }
+    
+    public void eliminarSoporteBalance(){
+        if(archivoBalance != null){
+            archivoService.remove(archivoBalance);
+            archivoFacade.remove(archivoBalance);
+            archivoBalance = null;
+            
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_INFO,
+                            "Soporte de balance eliminado de manera exitosa",
+                            "Soporte de balance eliminado de manera exitosa")
+            );
+        }        
     }
 
     public void cargarSoporteIngreso(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoIngresosRetenciones = archivoService.upload(Constantes.TIPO_INGRESO_RETENCION,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),              
                 event.getFile());
+    }
+    
+    public void eliminarSoporteIngreso(){
+        if(archivoIngresosRetenciones != null){
+            archivoService.remove(archivoIngresosRetenciones);
+            archivoFacade.remove(archivoIngresosRetenciones);
+            archivoIngresosRetenciones = null;
+            
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_INFO,
+                            "Soporte de ingresos y retenciones eliminado de manera exitosa",
+                            "Soporte de ingresos y retenciones eliminado de manera exitosa")
+            );
+        }        
     }
 
     public void cargarSoportePerdida(FileUploadEvent event) {
         HttpSession session = SessionUtils.getSession();
         this.archivoPerdidasGanancias = archivoService.upload(Constantes.TIPO_PERDIDA_GANANCIA,
-                (String) session.getAttribute("PEOPLE_CODE_ID"),
-                this.anyoActual,
-                this.semestreActual,
+                (String) session.getAttribute("PEOPLE_CODE_ID"),               
                 event.getFile());
+    }
+    
+    public void eliminarSoportePerdida(){
+        if(archivoPerdidasGanancias != null){
+            archivoService.remove(archivoPerdidasGanancias);
+            archivoFacade.remove(archivoPerdidasGanancias);
+            archivoPerdidasGanancias = null;
+            
+            FacesContext.getCurrentInstance().addMessage(
+                    null, new FacesMessage(
+                            FacesMessage.SEVERITY_INFO,
+                            "Soporte de pérdidas y ganancias eliminado de manera exitosa",
+                            "Soporte de pérdidas y ganancias eliminado de manera exitosa")
+            );
+        }        
     }
 
     public List<Integer> getAnyoList() {
