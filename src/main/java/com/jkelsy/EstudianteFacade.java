@@ -33,9 +33,7 @@ public class EstudianteFacade extends AbstractFacade<Estudiante> {
         Estudiante temporal;       
         try{
             temporal = em.createNamedQuery("Estudiante.findByCode", Estudiante.class)
-                    .setParameter("PEOPLE_CODE_ID", PEOPLE_CODE_ID)
-                    .setParameter("anyo", anyo)
-                    .setParameter("semestre", semestre)
+                    .setParameter("PEOPLE_CODE_ID", PEOPLE_CODE_ID)                    
                     .getSingleResult();
         }catch(Exception e){            
             temporal = null;

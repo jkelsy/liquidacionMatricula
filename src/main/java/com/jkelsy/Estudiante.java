@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @NamedQuery(name = "Estudiante.findByCode", query = 
-        "Select e from Estudiante e where e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID and e.anyoLiquidacion = :anyo and e.semestre = :semestre"
+        "Select e from Estudiante e where e.PEOPLE_CODE_ID = :PEOPLE_CODE_ID "
 )
 public class Estudiante implements Serializable { 
     
@@ -26,11 +26,7 @@ public class Estudiante implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Basic private String PEOPLE_CODE_ID;
-    
-    @Basic private int anyoLiquidacion;
-    
-    @Basic private String semestre;
+    @Basic private String PEOPLE_CODE_ID;    
     
     @Basic private String nacionalidad;
 
@@ -95,15 +91,7 @@ public class Estudiante implements Serializable {
     public void setUltimoAnyoPago(int ultimoAnyoPago) {
         this.ultimoAnyoPago = ultimoAnyoPago;
     }
-
-    public int getAnyoLiquidacion() {
-        return anyoLiquidacion;
-    }
-
-    public void setAnyoLiquidacion(int anyoLiquidacion) {
-        this.anyoLiquidacion = anyoLiquidacion;
-    }
-
+    
     public Long getId() {
         return this.id;
     }
@@ -166,14 +154,6 @@ public class Estudiante implements Serializable {
 
     public void setNacionalidad(String nacionalidad) {
         this.nacionalidad = nacionalidad;
-    }
-
-    public String getSemestre() {
-        return semestre;
-    }
-
-    public void setSemestre(String semestre) {
-        this.semestre = semestre;
     }
 
     public String getTipoColegio() {

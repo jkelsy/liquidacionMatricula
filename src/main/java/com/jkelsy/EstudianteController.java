@@ -334,9 +334,7 @@ public class EstudianteController implements Serializable {
 
         if (validar()) {
             HttpSession session = SessionUtils.getSession();
-            estudiante.setPEOPLE_CODE_ID((String) session.getAttribute("PEOPLE_CODE_ID"));
-            estudiante.setAnyoLiquidacion(anyoActual);
-            estudiante.setSemestre(semestreActual);
+            estudiante.setPEOPLE_CODE_ID((String) session.getAttribute("PEOPLE_CODE_ID"));            
             estudiante.setFechaActualizacion(new Date());
             estudiante.setActualizadoPor((String) session.getAttribute("username"));
             estudianteFacade.guardar(estudiante);
